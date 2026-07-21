@@ -1,0 +1,19 @@
+[package]
+name = "{{project_name}}"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m = "0.7"
+cortex-m-rt = "0.7"
+embedded-hal = "1.0"
+panic-halt = "1"
+rp2040-hal = { version = "0.11", features = ["rt", "critical-section-impl"] }
+rp2040-boot2 = "0.3"
+
+# Smaller, faster binaries; RP2040 flash is not the bottleneck but RAM is.
+[profile.release]
+codegen-units = 1
+debug = true
+lto = true
+opt-level = "s"

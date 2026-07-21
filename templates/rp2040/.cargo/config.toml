@@ -1,0 +1,12 @@
+[build]
+target = "thumbv6m-none-eabi"
+
+[target.thumbv6m-none-eabi]
+# Default: drag-and-drop flashing over USB (hold BOOTSEL while plugging in).
+runner = "elf2uf2-rs -d"
+# With a debug probe, comment the line above and use:
+# runner = "probe-rs run --chip RP2040"
+rustflags = [
+    "-C", "link-arg=--nmagic",
+    "-C", "link-arg=-Tlink.x",
+]

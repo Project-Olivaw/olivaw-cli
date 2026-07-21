@@ -1,0 +1,16 @@
+[package]
+name = "{{project_name}}"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+esp-hal = { version = "1", features = ["esp32"] }
+
+# esp-hal needs optimized builds even in dev, or timing (and boot) misbehaves.
+[profile.dev]
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = "s"

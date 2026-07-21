@@ -1,0 +1,9 @@
+[package]
+name = "{{project_name}}"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Components you add with `olivaw add` will list their dependencies here.
+# For real GPIO on a Linux SBC (Raspberry Pi, Jetson), start with:
+#   linux-embedded-hal = "0.4"
