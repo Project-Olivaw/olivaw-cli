@@ -22,8 +22,8 @@ pub struct CargoEditOutcome {
 
 pub fn add_missing_deps(project: &Project, deps: &[CargoDep]) -> anyhow::Result<CargoEditOutcome> {
     let path = project.cargo_toml_path();
-    let original = std::fs::read_to_string(&path)
-        .with_context(|| format!("reading {}", path.display()))?;
+    let original =
+        std::fs::read_to_string(&path).with_context(|| format!("reading {}", path.display()))?;
     let mut doc: DocumentMut = original.parse().with_context(|| {
         format!(
             "{} is not valid TOML — fix it before adding components",
@@ -53,8 +53,7 @@ pub fn add_missing_deps(project: &Project, deps: &[CargoDep]) -> anyhow::Result<
         updated = updated.replace('\n', "\r\n");
     }
     if updated != original {
-        std::fs::write(&path, updated)
-            .with_context(|| format!("writing {}", path.display()))?;
+        std::fs::write(&path, updated).with_context(|| format!("writing {}", path.display()))?;
     }
     Ok(outcome)
 }
@@ -123,7 +122,10 @@ serde = { version = \"1\", features = [\"derive\"] }
         let (text, outcome) = edit(original, &[("embedded-hal", "1.0"), ("libm", "0.2")]);
         assert_eq!(outcome.added.len(), 2);
         // Untouched regions are byte-identical.
-        assert!(text.starts_with(original.trim_end_matches('\n')) || text.contains("# pinned for a reason"));
+        assert!(
+            text.starts_with(original.trim_end_matches('\n'))
+                || text.contains("# pinned for a reason")
+        );
         assert!(text.contains("# my project"));
         assert!(text.contains("name = \"robot\"   # the name"));
         assert!(text.contains("serde = { version = \"1\", features = [\"derive\"] }"));

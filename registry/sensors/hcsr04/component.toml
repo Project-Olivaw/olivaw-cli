@@ -1,0 +1,33 @@
+[component]
+name = "hcsr04"
+category = "sensors"
+version = "0.1.0"
+description = "HC-SR04 ultrasonic distance sensor — blocking poll-based driver, millimetres out"
+license = "MIT"
+
+[hardware]
+devices = ["HC-SR04", "HC-SR04P (3.3V variant)"]
+interface = "gpio (trigger out, echo in) + delay"
+voltage = "5V for the classic HC-SR04 (echo needs a divider to 3.3V MCUs!); HC-SR04P runs at 3.3V"
+notes = "TRIG=GPIO5 ECHO=GPIO4 (through a 1k/2k divider) on the reference ESP32 wiring; range 20-4000 mm"
+
+[compatibility]
+no_std = true
+embedded_hal = "1.0"
+targets = ["esp32", "esp32c3", "rp2040", "stm32", "linux"]
+
+[verification]
+verified = false
+reference = "Written from the HC-SR04 datasheet timing spec; bench-simulated unit tests; not yet flashed on hardware"
+
+[[files]]
+src = "src/hcsr04.rs"
+dest = "src/sensors/hcsr04.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/hcsr04_sweep.rs"
+optional = true
+
+[dependencies.cargo]
+"embedded-hal" = "1.0"

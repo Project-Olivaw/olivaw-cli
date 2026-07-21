@@ -14,9 +14,9 @@ use std::process::Command;
 
 use anyhow::{bail, Context};
 
+use super::RegistrySource;
 use crate::ui::Ui;
 use crate::RegistryOpts;
-use super::RegistrySource;
 
 /// Canonical registry repo. The registry lives inside the olivaw-cli repo
 /// itself; tags `registry-v<version>` pin its content.
@@ -64,8 +64,7 @@ pub fn ensure_cached(ui: &Ui, opts: &RegistryOpts) -> anyhow::Result<RegistrySou
     let root = cache_root()?;
     let final_dir = root.join(&tag);
     let tmp_dir = root.join(format!(".tmp-{tag}"));
-    std::fs::create_dir_all(&root)
-        .with_context(|| format!("creating {}", root.display()))?;
+    std::fs::create_dir_all(&root).with_context(|| format!("creating {}", root.display()))?;
     // A stale tmp dir from a crashed run would make clone fail; clear it.
     if tmp_dir.exists() {
         std::fs::remove_dir_all(&tmp_dir)

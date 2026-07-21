@@ -1,0 +1,33 @@
+[component]
+name = "led"
+category = "drivers"
+version = "0.1.0"
+description = "Non-blocking LED blinker state machine — off/on/slow/fast, tick-driven, generic over embedded-hal"
+license = "MIT"
+
+[hardware]
+devices = ["any LED", "ESP32 DevKit onboard LED"]
+interface = "gpio"
+voltage = "3.3V GPIO; external LEDs need a series resistor (220-1k ohm)"
+notes = "Onboard LED is GPIO2 on most ESP32 DevKit boards, GPIO25 on the Pi Pico"
+
+[compatibility]
+no_std = true
+embedded_hal = "1.0"
+targets = ["esp32", "esp32c3", "rp2040", "stm32", "linux"]
+
+[verification]
+verified = false
+reference = "Rust port of Hands-On-Robotics module 06 C++ firmware (verified on ESP32 DevKit v1 with BLE); this port not yet flashed"
+
+[[files]]
+src = "src/led.rs"
+dest = "src/drivers/led.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/led_modes.rs"
+optional = true
+
+[dependencies.cargo]
+"embedded-hal" = "1.0"

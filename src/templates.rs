@@ -37,9 +37,9 @@ impl Target {
 pub fn scaffold_plan(name: &str, target: Target) -> anyhow::Result<Plan> {
     let mut plan = Plan::new();
     for dir_name in ["common", target.as_str()] {
-        let dir = TEMPLATES
-            .get_dir(dir_name)
-            .with_context(|| format!("missing embedded template dir '{dir_name}' — this is a build bug in olivaw"))?;
+        let dir = TEMPLATES.get_dir(dir_name).with_context(|| {
+            format!("missing embedded template dir '{dir_name}' — this is a build bug in olivaw")
+        })?;
         collect_files(dir, dir_name, name, &mut plan)?;
     }
     Ok(plan)
@@ -65,9 +65,13 @@ fn collect_files(
                     .context("template path is not UTF-8")?;
                 // "gitignore" is stored unhidden so it survives packaging;
                 // restore the dot on the way out.
-                let rel = if rel == "gitignore" { ".gitignore" } else { rel };
-                let dest = RelPath::new(rel)
-                    .with_context(|| format!("invalid template path '{rel}'"))?;
+                let rel = if rel == "gitignore" {
+                    ".gitignore"
+                } else {
+                    rel
+                };
+                let dest =
+                    RelPath::new(rel).with_context(|| format!("invalid template path '{rel}'"))?;
                 let contents: Cow<'static, [u8]> = match std::str::from_utf8(file.contents()) {
                     Ok(text) if text.contains("{{project_name}}") => {
                         Cow::Owned(text.replace("{{project_name}}", project_name).into_bytes())

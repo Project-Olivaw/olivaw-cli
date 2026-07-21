@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*", "registry-v*"]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: fmt + clippy + tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+
+  golden-host:
+    name: golden — vendored components compile (linux scaffold)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --test golden -- --ignored
+
+  golden-rp2040:
+    name: golden — rp2040 scaffold builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: thumbv6m-none-eabi
+      - uses: Swatinem/rust-cache@v2
+      - name: scaffold and build
+        run: |
+          cargo build --release
+          mkdir -p /tmp/scaffold && cd /tmp/scaffold
+          "$GITHUB_WORKSPACE/target/release/olivaw" init --name pico-bot --target rp2040
+          cd pico-bot
+          # The scaffold pins its own toolchain file; build for the pinned target.
+          cargo build
+
+  golden-esp32:
+    name: golden — esp32 scaffold builds (Xtensa)
+    runs-on: ubuntu-latest
+    container: espressif/idf-rust:esp32_latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: scaffold and build
+        run: |
+          # The container ships the 'esp' toolchain; HOME holds its rustup.
+          cargo build --release
+          mkdir -p /tmp/scaffold && cd /tmp/scaffold
+          "$GITHUB_WORKSPACE/target/release/olivaw" init --name esp-bot --target esp32
+          cd esp-bot
+          cargo build

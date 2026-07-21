@@ -45,6 +45,26 @@ impl Project {
         self.root.join("olivaw.toml")
     }
 
+    /// The Cargo package name, falling back to the directory name.
+    pub fn package_name(&self) -> String {
+        let from_cargo = std::fs::read_to_string(self.cargo_toml_path())
+            .ok()
+            .and_then(|text| text.parse::<toml_edit::DocumentMut>().ok())
+            .and_then(|doc| {
+                doc.get("package")?
+                    .get("name")?
+                    .as_str()
+                    .map(ToString::to_string)
+            });
+        from_cargo.unwrap_or_else(|| {
+            self.root
+                .file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or("project")
+                .to_string()
+        })
+    }
+
     pub fn cargo_toml_path(&self) -> PathBuf {
         self.root.join("Cargo.toml")
     }

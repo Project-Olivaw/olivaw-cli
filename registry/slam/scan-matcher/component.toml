@@ -1,0 +1,42 @@
+[component]
+name = "scan-matcher"
+category = "slam"
+version = "0.1.0"
+description = "Point-to-point ICP scan matcher — k-d tree correspondences, Huber weighting, covariance out"
+license = "MIT"
+
+[hardware]
+devices = ["any 2D lidar producing ScanCloud (see sensors/rplidar)"]
+interface = "pure math"
+
+[compatibility]
+no_std = false
+targets = ["linux"]
+
+[verification]
+verified = true
+reference = "Extracted from olivaw-slam, where this matcher runs in a live RPLIDAR C1 pipeline; synthetic-scene accuracy tests included"
+
+[[files]]
+src = "src/mod.rs"
+dest = "src/slam/matcher/mod.rs"
+
+[[files]]
+src = "src/icp.rs"
+dest = "src/slam/matcher/icp.rs"
+
+[[files]]
+src = "src/test_scenes.rs"
+dest = "src/slam/matcher/test_scenes.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/scan_match_demo.rs"
+optional = true
+
+[dependencies.cargo]
+"nalgebra" = "0.34"
+"kiddo" = "5"
+
+[dependencies.components]
+"slam/core-types" = "0.1"

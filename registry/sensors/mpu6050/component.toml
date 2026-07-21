@@ -1,0 +1,33 @@
+[component]
+name = "mpu6050"
+category = "sensors"
+version = "0.1.0"
+description = "MPU-6050/6500 6-axis IMU — accelerometer and gyroscope over I2C, units in g and deg/s"
+license = "MIT"
+
+[hardware]
+devices = ["MPU-6050", "MPU-6500", "GY-521 breakout"]
+interface = "i2c (400 kHz fast mode supported)"
+voltage = "3.3V or 5V (GY-521 has an onboard regulator); logic is 3.3V"
+notes = "SDA=GPIO21 SCL=GPIO22 on the reference ESP32 wiring; address 0x68, or 0x69 with AD0 high"
+
+[compatibility]
+no_std = true
+embedded_hal = "1.0"
+targets = ["esp32", "esp32c3", "rp2040", "stm32", "linux"]
+
+[verification]
+verified = false
+reference = "Written from the InvenSense register map rev 4.2; register-level unit tests; not yet flashed on hardware"
+
+[[files]]
+src = "src/mpu6050.rs"
+dest = "src/sensors/mpu6050.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/mpu6050_read.rs"
+optional = true
+
+[dependencies.cargo]
+"embedded-hal" = "1.0"

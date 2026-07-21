@@ -28,10 +28,7 @@ mod tests {
             sha256_hex(b""),
             "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         );
-        assert_eq!(
-            sha256_hex(b"olivaw"),
-            sha256_hex(b"olivaw"),
-        );
+        assert_eq!(sha256_hex(b"olivaw"), sha256_hex(b"olivaw"),);
         assert_ne!(sha256_hex(b"a"), sha256_hex(b"b"));
     }
 }

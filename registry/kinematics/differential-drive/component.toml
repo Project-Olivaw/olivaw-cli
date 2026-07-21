@@ -1,0 +1,28 @@
+[component]
+name = "differential-drive"
+category = "kinematics"
+version = "0.1.0"
+description = "Differential-drive kinematics — (v, ω) twists to ratio-preserving per-side commands and back"
+license = "MIT"
+
+[hardware]
+devices = ["any 2-wheel differential base (2WD chassis, tracked robot)"]
+interface = "pure math"
+notes = "Measure track width between wheel contact patches; max wheel speed from wheel diameter x motor no-load RPM, derated ~20%"
+
+[compatibility]
+no_std = true
+targets = ["esp32", "esp32c3", "rp2040", "stm32", "linux"]
+
+[verification]
+verified = false
+reference = "Mixing behaviour ports Hands-On-Robotics module 07 (verified on a 2WD ESP32 robot); ratio-preserving saturation is new, covered by unit tests"
+
+[[files]]
+src = "src/differential_drive.rs"
+dest = "src/kinematics/differential_drive.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/diffdrive_table.rs"
+optional = true

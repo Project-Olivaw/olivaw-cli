@@ -41,12 +41,10 @@ impl FromStr for ComponentId {
                     .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
         };
         match s.split_once('/') {
-            Some((category, name)) if valid_part(category) && valid_part(name) => {
-                Ok(ComponentId {
-                    category: category.to_string(),
-                    name: name.to_string(),
-                })
-            }
+            Some((category, name)) if valid_part(category) && valid_part(name) => Ok(ComponentId {
+                category: category.to_string(),
+                name: name.to_string(),
+            }),
             _ => bail!(
                 "'{s}' is not a component path — expected <category>/<name>, \
                  lowercase and hyphenated (e.g. sensors/mpu6050). \
@@ -124,17 +122,13 @@ impl Registry {
             }
         };
         let text = std::str::from_utf8(&raw).context("registry.toml is not UTF-8")?;
-        let index: RegistryIndex =
-            toml::from_str(text).context("parsing registry.toml")?;
+        let index: RegistryIndex = toml::from_str(text).context("parsing registry.toml")?;
         Ok(Registry { source, index })
     }
 
     /// All component ids in the index, sorted (BTreeMap order).
     pub fn ids(&self) -> impl Iterator<Item = ComponentId> + '_ {
-        self.index
-            .components
-            .keys()
-            .filter_map(|k| k.parse().ok())
+        self.index.components.keys().filter_map(|k| k.parse().ok())
     }
 
     /// Index entry (version + description) for `list`.
@@ -150,8 +144,7 @@ impl Registry {
         }
         let rel = format!("{}/{}/component.toml", id.category, id.name);
         let raw = self.read_registry_file(&rel)?;
-        let text = std::str::from_utf8(&raw)
-            .with_context(|| format!("{rel} is not UTF-8"))?;
+        let text = std::str::from_utf8(&raw).with_context(|| format!("{rel} is not UTF-8"))?;
         let component: Component =
             toml::from_str(text).with_context(|| format!("parsing {rel}"))?;
         // The manifest must agree with its location; a mismatch is a registry
@@ -159,7 +152,8 @@ impl Registry {
         if component.component.name != id.name || component.component.category != id.category {
             bail!(
                 "registry inconsistency: {rel} declares '{}/{}' — please report this",
-                component.component.category, component.component.name
+                component.component.category,
+                component.component.name
             );
         }
         Ok(component)
@@ -204,10 +198,7 @@ impl Registry {
 
     /// All category names present in the index, deduped + sorted.
     pub fn categories(&self) -> Vec<String> {
-        let mut cats: Vec<String> = self
-            .ids()
-            .map(|id| id.category)
-            .collect();
+        let mut cats: Vec<String> = self.ids().map(|id| id.category).collect();
         cats.sort();
         cats.dedup();
         cats
@@ -223,9 +214,7 @@ impl Registry {
                  Run 'olivaw list {}' to see all",
                 close.split('/').next().unwrap_or("")
             ),
-            None => format!(
-                "no component '{input}'. Run 'olivaw list' to see all components"
-            ),
+            None => format!("no component '{input}'. Run 'olivaw list' to see all components"),
         }
     }
 }

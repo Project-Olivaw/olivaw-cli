@@ -24,15 +24,8 @@ pub fn run(
     let registry = Registry::load_fetching(ui, opts)?;
     let id = component.parse()?;
 
-    let mut manifest = ProjectManifest::load(&project)?.unwrap_or_else(|| {
-        let name = project
-            .root
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or("project")
-            .to_string();
-        ProjectManifest::new_for(&name, "unknown")
-    });
+    let mut manifest = ProjectManifest::load(&project)?
+        .unwrap_or_else(|| ProjectManifest::new_for(&project.package_name(), "unknown"));
 
     let installs = resolve(&registry, std::slice::from_ref(&id), &manifest.components)?;
     if installs.is_empty() {

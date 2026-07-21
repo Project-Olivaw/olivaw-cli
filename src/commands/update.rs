@@ -39,12 +39,11 @@ pub fn run(
 ) -> anyhow::Result<ExitCode> {
     let project = Project::discover()?;
     let id: crate::registry::ComponentId = component.parse()?;
-    let mut manifest = ProjectManifest::load(&project)?
-        .with_context(|| format!("no olivaw.toml here — nothing is installed yet. Use 'olivaw add {id}'"))?;
+    let mut manifest = ProjectManifest::load(&project)?.with_context(|| {
+        format!("no olivaw.toml here — nothing is installed yet. Use 'olivaw add {id}'")
+    })?;
     let Some(installed) = manifest.components.get(&id.to_string()).cloned() else {
-        bail!(
-            "{id} is not installed in this project — install it with 'olivaw add {id}'"
-        );
+        bail!("{id} is not installed in this project — install it with 'olivaw add {id}'");
     };
 
     let registry = Registry::load_fetching(ui, opts)?;
@@ -57,7 +56,9 @@ pub fn run(
 
     for file in &comp.files {
         let dest = RelPath::new(&file.dest).with_context(|| {
-            format!("component {id} declares an unsafe destination — registry bug, please report it")
+            format!(
+                "component {id} declares an unsafe destination — registry bug, please report it"
+            )
         })?;
         incoming_dests.push(dest.as_str().to_string());
         let incoming = registry.read_file(&id, &file.src)?.into_owned();
@@ -81,7 +82,10 @@ pub fn run(
                         let old_lines = disk.iter().filter(|b| **b == b'\n').count();
                         let new_lines = incoming.iter().filter(|b| **b == b'\n').count();
                         FileAction::Upstream {
-                            new_len_delta: (new_lines.saturating_sub(old_lines), old_lines.saturating_sub(new_lines)),
+                            new_len_delta: (
+                                new_lines.saturating_sub(old_lines),
+                                old_lines.saturating_sub(new_lines),
+                            ),
                         }
                     } else {
                         // No recorded hash counts as user-modified too: when in
@@ -156,7 +160,9 @@ pub fn run(
     for dropped_file in &dropped {
         println!(
             "  {dropped_file}   {}",
-            ui.dim("no longer part of this component — left in place, remove it yourself if unwanted")
+            ui.dim(
+                "no longer part of this component — left in place, remove it yourself if unwanted"
+            )
         );
     }
 
@@ -247,7 +253,12 @@ pub fn run(
     }
     if let Some(cargo) = &report.cargo {
         for dep in &cargo.added {
-            println!("    {} {} = \"{}\" added to Cargo.toml", ui.ok("+"), dep.name, dep.req);
+            println!(
+                "    {} {} = \"{}\" added to Cargo.toml",
+                ui.ok("+"),
+                dep.name,
+                dep.req
+            );
         }
     }
     println!();

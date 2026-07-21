@@ -20,9 +20,7 @@ pub fn run(ui: &Ui, name: Option<&str>, target: Target, force: bool) -> anyhow::
                     .chars()
                     .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
             {
-                bail!(
-                    "'{name}' is not a valid project name — use letters, digits, '-' and '_'"
-                );
+                bail!("'{name}' is not a valid project name — use letters, digits, '-' and '_'");
             }
             (cwd.join(name), name.to_string())
         }
@@ -57,8 +55,7 @@ pub fn run(ui: &Ui, name: Option<&str>, target: Target, force: bool) -> anyhow::
         );
     }
 
-    std::fs::create_dir_all(&root)
-        .with_context(|| format!("creating {}", root.display()))?;
+    std::fs::create_dir_all(&root).with_context(|| format!("creating {}", root.display()))?;
     let project = Project { root: root.clone() };
     let mut manifest = ProjectManifest::new_for(&project_name, target.as_str());
     let report = plan.execute(&project, &mut manifest)?;
@@ -83,16 +80,28 @@ pub fn run(ui: &Ui, name: Option<&str>, target: Target, force: bool) -> anyhow::
     }
     match target {
         Target::Esp32 => {
-            println!("    espup install                   {}", ui.dim("(once — installs the Xtensa Rust toolchain)"));
+            println!(
+                "    espup install                   {}",
+                ui.dim("(once — installs the Xtensa Rust toolchain)")
+            );
             println!("    cargo install espflash          {}", ui.dim("(once)"));
-            println!("    cargo run                       {}", ui.dim("→ flashes and blinks the onboard LED (GPIO2)"));
+            println!(
+                "    cargo run                       {}",
+                ui.dim("→ flashes and blinks the onboard LED (GPIO2)")
+            );
         }
         Target::Rp2040 => {
             println!("    cargo install elf2uf2-rs        {}", ui.dim("(once)"));
-            println!("    hold BOOTSEL, plug in the Pico, then:  cargo run   {}", ui.dim("→ onboard LED blinks"));
+            println!(
+                "    hold BOOTSEL, plug in the Pico, then:  cargo run   {}",
+                ui.dim("→ onboard LED blinks")
+            );
         }
         Target::Linux => {
-            println!("    cargo run                       {}", ui.dim("→ prints a simulated blinky"));
+            println!(
+                "    cargo run                       {}",
+                ui.dim("→ prints a simulated blinky")
+            );
         }
     }
     println!();

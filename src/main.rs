@@ -116,9 +116,11 @@ fn main() -> ExitCode {
     };
 
     let result = match cli.cmd {
-        Cmd::Init { name, target, force } => {
-            commands::init::run(&ui, name.as_deref(), target, force)
-        }
+        Cmd::Init {
+            name,
+            target,
+            force,
+        } => commands::init::run(&ui, name.as_deref(), target, force),
         Cmd::Add {
             component,
             path,

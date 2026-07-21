@@ -155,7 +155,11 @@ pub fn run(ui: &Ui, quiet: bool) -> anyhow::Result<ExitCode> {
                 "  {} {} component{} clean.",
                 ui.ok("✓"),
                 manifest.components.len(),
-                if manifest.components.len() == 1 { "" } else { "s" }
+                if manifest.components.len() == 1 {
+                    ""
+                } else {
+                    "s"
+                }
             );
             println!();
         }

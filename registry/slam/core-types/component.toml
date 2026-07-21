@@ -1,0 +1,33 @@
+[component]
+name = "core-types"
+category = "slam"
+version = "0.1.0"
+description = "2D SLAM core types — Pose2 (SE(2)), ScanCloud, SlamError; metres/radians, CCW-positive"
+license = "MIT"
+
+[hardware]
+devices = ["none — pure types"]
+interface = "pure math"
+
+[compatibility]
+no_std = false
+targets = ["linux"]
+
+[verification]
+verified = true
+reference = "Extracted from olivaw-slam, where these types run a live RPLIDAR C1 SLAM pipeline; property-tested there, unit-tested here"
+
+[[files]]
+src = "src/pose.rs"
+dest = "src/slam/pose.rs"
+
+[[files]]
+src = "src/scan.rs"
+dest = "src/slam/scan.rs"
+
+[[files]]
+src = "src/error.rs"
+dest = "src/slam/error.rs"
+
+[dependencies.cargo]
+"nalgebra" = "0.34"

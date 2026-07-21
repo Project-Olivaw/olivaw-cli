@@ -1,0 +1,45 @@
+[component]
+name = "rplidar"
+category = "sensors"
+version = "0.1.0"
+description = "SLAMTEC RPLIDAR wire protocol — pure no_std parser, bytes in, measurements out"
+license = "MIT"
+
+[hardware]
+devices = ["RPLIDAR C1", "RPLIDAR A1", "RPLIDAR A2"]
+interface = "uart (460800 baud on C1, 115200 on A1)"
+voltage = "5V supply, 3.3V UART logic"
+notes = "TX → RX(GPIO16), RX → TX(GPIO17) on the reference ESP32 wiring; motor control is PWM via Command::SetMotorPwm on models with MOTOR_CTL"
+
+[compatibility]
+no_std = true
+targets = ["esp32", "esp32c3", "rp2040", "stm32", "linux"]
+
+[verification]
+verified = true
+reference = "Extracted from olivaw-lidar, verified against an RPLIDAR C1 on macOS + ESP32; protocol tests replay captured device bytes"
+
+[[files]]
+src = "src/mod.rs"
+dest = "src/sensors/rplidar/mod.rs"
+
+[[files]]
+src = "src/command.rs"
+dest = "src/sensors/rplidar/command.rs"
+
+[[files]]
+src = "src/descriptor.rs"
+dest = "src/sensors/rplidar/descriptor.rs"
+
+[[files]]
+src = "src/scan_node.rs"
+dest = "src/sensors/rplidar/scan_node.rs"
+
+[[files]]
+src = "src/info.rs"
+dest = "src/sensors/rplidar/info.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/rplidar_decode.rs"
+optional = true

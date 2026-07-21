@@ -3,3 +3,39 @@
 
 [registry]
 version = "0.1.0"
+
+[components."comms/cmdvel-protocol"]
+version = "0.1.0"
+description = "Drive-command text protocol + safety watchdog, transport-agnostic"
+
+[components."drivers/l298n"]
+version = "0.1.0"
+description = "L298N dual H-bridge DC motor driver — direction + PWM speed"
+
+[components."drivers/led"]
+version = "0.1.0"
+description = "Non-blocking LED blinker state machine (off/on/slow/fast)"
+
+[components."kinematics/differential-drive"]
+version = "0.1.0"
+description = "(v, ω) twists ↔ wheel speeds, ratio-preserving saturation"
+
+[components."sensors/hcsr04"]
+version = "0.1.0"
+description = "HC-SR04 ultrasonic ranger — blocking driver, millimetres out"
+
+[components."sensors/mpu6050"]
+version = "0.1.0"
+description = "MPU-6050/6500 6-axis IMU — accel + gyro over I2C, g and °/s"
+
+[components."sensors/rplidar"]
+version = "0.1.0"
+description = "SLAMTEC RPLIDAR wire protocol — pure no_std parser"
+
+[components."slam/core-types"]
+version = "0.1.0"
+description = "Pose2 (SE(2)), ScanCloud, SlamError — 2D SLAM foundations"
+
+[components."slam/scan-matcher"]
+version = "0.1.0"
+description = "Point-to-point ICP scan matcher with covariance and scoring"

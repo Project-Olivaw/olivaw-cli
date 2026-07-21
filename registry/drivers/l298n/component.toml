@@ -1,0 +1,33 @@
+[component]
+name = "l298n"
+category = "drivers"
+version = "0.1.0"
+description = "L298N dual H-bridge DC motor driver — direction pins + PWM speed, generic over embedded-hal"
+license = "MIT"
+
+[hardware]
+devices = ["L298N"]
+interface = "gpio + pwm"
+voltage = "5V logic on the breakout; motor supply 5-12V (shared GND with the MCU)"
+notes = "Reference ESP32 wiring: ENA=GPIO22 IN1=GPIO16 IN2=GPIO17 (right), ENB=GPIO23 IN3=GPIO18 IN4=GPIO19 (left); 1 kHz 8-bit PWM on the EN pins"
+
+[compatibility]
+no_std = true
+embedded_hal = "1.0"
+targets = ["esp32", "esp32c3", "rp2040", "stm32", "linux"]
+
+[verification]
+verified = false
+reference = "Rust port of Hands-On-Robotics module 07 C++ firmware (verified on ESP32 DevKit v1 + 2WD chassis); this port not yet flashed"
+
+[[files]]
+src = "src/l298n.rs"
+dest = "src/drivers/l298n.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/l298n_sweep.rs"
+optional = true
+
+[dependencies.cargo]
+"embedded-hal" = "1.0"

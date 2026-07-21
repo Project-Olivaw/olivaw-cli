@@ -1,0 +1,28 @@
+[component]
+name = "cmdvel-protocol"
+category = "comms"
+version = "0.1.0"
+description = "Drive-command text protocol '<left>,<right>' + 500ms safety watchdog — transport-agnostic, no_std"
+license = "MIT"
+
+[hardware]
+devices = ["any radio or serial link (BLE GATT, UART, UDP)"]
+interface = "bytes in / bytes out"
+notes = "Reference transport: BLE WRITE characteristic 12345678-1234-5678-1234-56789abcdef1, device name HOR-Car-BLE"
+
+[compatibility]
+no_std = true
+targets = ["esp32", "esp32c3", "rp2040", "stm32", "linux"]
+
+[verification]
+verified = false
+reference = "Rust port of Hands-On-Robotics module 07 frame protocol + watchdog (verified on ESP32 DevKit v1 over BLE); this port not yet flashed"
+
+[[files]]
+src = "src/cmdvel.rs"
+dest = "src/comms/cmdvel.rs"
+
+[[files]]
+src = "example.rs"
+dest = "examples/cmdvel_replay.rs"
+optional = true

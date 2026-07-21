@@ -30,7 +30,9 @@ pub fn resolve(
     let mut stack: Vec<ComponentId> = Vec::new();
 
     for root in roots {
-        visit(registry, root, true, installed, &mut done, &mut stack, &mut order)?;
+        visit(
+            registry, root, true, installed, &mut done, &mut stack, &mut order,
+        )?;
     }
     Ok(order)
 }
@@ -62,9 +64,9 @@ fn visit(
 
     stack.push(id.clone());
     for dep_path in component.dependencies.components.keys() {
-        let dep_id: ComponentId = dep_path.parse().with_context(|| {
-            format!("component {id} declares invalid dependency '{dep_path}'")
-        })?;
+        let dep_id: ComponentId = dep_path
+            .parse()
+            .with_context(|| format!("component {id} declares invalid dependency '{dep_path}'"))?;
         visit(registry, &dep_id, false, installed, done, stack, order)?;
     }
     stack.pop();

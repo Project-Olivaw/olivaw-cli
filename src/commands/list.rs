@@ -43,10 +43,7 @@ pub fn run(ui: &Ui, opts: &RegistryOpts, category: Option<&str>) -> anyhow::Resu
                     "no category '{cat}' — did you mean '{close}'? \
                      Run 'olivaw list' to see all categories"
                 ),
-                None => format!(
-                    "no category '{cat}'. Categories: {}",
-                    cats.join(", ")
-                ),
+                None => format!("no category '{cat}'. Categories: {}", cats.join(", ")),
             };
             bail!("{msg}");
         }
