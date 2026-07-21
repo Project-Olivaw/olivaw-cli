@@ -94,7 +94,7 @@ sequenceDiagram
     A->>V: resolve([scan-matcher], installed)
     V->>R: component.toml lookups (recursive, cycle-checked)
     V-->>A: install order: [core-types, scan-matcher]
-    A->>U: confirm extra components (dialoguer; non-TTY needs --force)
+    A->>U: confirm extra components (dialoguer, non-TTY needs --force)
     A->>P: build Plan (RelPath-validated dests, sha256 per file)
     Note over A,P: existing dest without --force -> hard error listing conflicts
     P->>FS: 1. write component files (create parent dirs)
