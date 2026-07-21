@@ -14,6 +14,23 @@ Each command **copies source code into your project**. It does not add a
 dependency. You own the code, you can edit it, and you are never blocked by
 anyone's release cadence.
 
+```mermaid
+flowchart LR
+    subgraph registry["curated registry"]
+        C1["sensors/mpu6050"]
+        C2["drivers/l298n"]
+        C3["slam/scan-matcher"]
+    end
+    subgraph project["your project"]
+        S["src/... — files you own and can edit"]
+        M["olivaw.toml — versions + per-file sha256"]
+        CT["Cargo.toml — deps appended, formatting preserved"]
+    end
+    registry -- "olivaw add: copy, not depend" --> S
+    registry -- "declared crate deps" --> CT
+    S -. "tracked by" .-> M
+```
+
 Part of [Project Olivaw](https://github.com/Project-Olivaw) — tools and
 examples for robotics in Rust.
 
@@ -47,6 +64,18 @@ cargo install olivaw
 makes `update` safe: if you edited a file, `update` shows you the diff and
 asks (default **No**) — silently destroying your changes is the one
 unforgivable bug in a tool like this, and it is designed out.
+
+```mermaid
+flowchart TD
+    F["olivaw update: for each file"] --> B{"disk == incoming?"}
+    B -- yes --> UTD["up to date, skip"]
+    B -- no --> C{"disk == recorded install hash?"}
+    C -- yes --> UP["upstream change: apply after confirm"]
+    C -- no --> MOD["you edited it: full diff shown"]
+    MOD --> Q{"confirm (default No) or --force?"}
+    Q -- no --> SAFE["nothing written, your edits survive"]
+    Q -- yes --> W["overwrite, record new hash"]
+```
 
 ## Components (v0.1 registry)
 
@@ -86,3 +115,6 @@ entirely.
 cargo test                          # unit + integration + snapshot tests
 cargo test --test golden -- --ignored   # vendor everything, compile it
 ```
+
+Contributor documentation — architecture, registry format, drift-detection
+design, lessons learned — lives in [documentation/](documentation/README.md).

@@ -25,6 +25,24 @@ a BLE characteristic write, a UART, a UDP packet — anything.
 | silence > timeout         | `command()` returns `(0, 0)`                     |
 | explicit disconnect       | call `trip()` — zeros immediately, no wait       |
 
+```mermaid
+stateDiagram-v2
+    [*] --> Stopped: power on
+    Stopped --> Driving: valid frame (feed)
+    Driving --> Driving: valid frame (feed)
+    Driving --> Driving: corrupt frame (ignored, target holds)
+    Driving --> Stopped: silence > timeout
+    Driving --> Stopped: disconnect (trip)
+    note right of Stopped
+        command() returns (0, 0)
+        motors stop, robot is safe
+    end note
+    note right of Driving
+        command() returns the last
+        valid target speeds
+    end note
+```
+
 ## Usage (firmware side)
 
 ```rust

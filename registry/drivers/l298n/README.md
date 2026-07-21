@@ -39,7 +39,21 @@ motors.stop()?;                              // coast both
 
 Pair it with `kinematics/differential-drive` to convert `(v, ω)` commands
 into these per-side speeds, and `comms/cmdvel-protocol` for the BLE/serial
-command framing + safety watchdog.
+command framing + safety watchdog. The full robot-car stack, every stage a
+vendored component:
+
+```mermaid
+flowchart LR
+    subgraph controller["controller (app / gamepad bridge)"]
+        IN["stick input: v, omega"] --> K["kinematics/differential-drive<br/>mix() to per-side per-mille"]
+        K --> E["cmdvel encode_frame"]
+    end
+    subgraph firmware["robot firmware"]
+        W["comms/cmdvel-protocol<br/>parse_frame + Watchdog"] --> D["drivers/l298n<br/>direction pins + PWM duty"]
+    end
+    E -- "BLE / serial: left,right" --> W
+    D --> M["motors"]
+```
 
 ## Try it (no hardware)
 

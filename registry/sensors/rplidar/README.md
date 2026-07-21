@@ -20,6 +20,24 @@ exactly this module.
 A1/A2 models: 115200 baud, and the motor is enabled via the MOTOR_CTL pin
 (PWM) rather than a protocol command.
 
+## Protocol shape
+
+```mermaid
+sequenceDiagram
+    participant H as host (your code)
+    participant L as RPLIDAR
+
+    H->>L: Command::Scan.encode() -> [0xA5, 0x20]
+    L->>H: 7-byte descriptor (0xA5 0x5A, len=5, Multi, type 0x81)
+    Note over H: parse_descriptor + expect()
+    loop until Stop
+        L->>H: 5-byte scan node
+        Note over H: parse_scan_node -> angle_deg / distance_mm / start_flag
+    end
+    Note over H,L: invalid node = desync: discard 1 byte, retry (could_start_node)
+    H->>L: Command::Stop.encode() -> [0xA5, 0x25]
+```
+
 ## Usage sketch
 
 ```rust

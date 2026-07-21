@@ -10,6 +10,21 @@ Implementation: k-d tree correspondences (kiddo), Huber-weighted
 Gauss-Newton, inlier-ratio + RMSE scoring. Depends on `slam/core-types`
 (installed automatically).
 
+```mermaid
+flowchart TD
+    A["reference scan + query scan + initial guess"] --> B["build k-d tree over finite reference points"]
+    B --> C["for each query point: transform by current pose, find nearest neighbour"]
+    C --> D["reject pairs beyond max_correspondence_dist; Huber-weight the rest"]
+    D --> E["accumulate Gauss-Newton normal equations"]
+    E --> F["Cholesky solve -> pose delta"]
+    F --> G{"delta below epsilon?"}
+    G -- "no, iterations left" --> C
+    G -- yes --> H["converged = true"]
+    G -- "no, out of iterations" --> I["converged = false (result still returned)"]
+    H --> J["MatchResult: pose, covariance from H^-1, score = inlier_ratio x exp(-rmse/sigma)"]
+    I --> J
+```
+
 ## When ICP is the right tool — and when it isn't
 
 ICP is fast and precise **when the initial guess is good** (odometry, or
