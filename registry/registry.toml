@@ -1,0 +1,5 @@
+# Olivaw component registry index. One entry per component; the CLI's `list`
+# command parses only this file.
+
+[registry]
+version = "0.1.0"

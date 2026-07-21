@@ -1,0 +1,49 @@
+[package]
+name = "olivaw"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+description = "Vendored, editable Rust components for robotics — shadcn/ui for embedded"
+license = "MIT"
+repository = "https://github.com/Project-Olivaw/olivaw-cli"
+keywords = ["robotics", "embedded", "cli", "vendoring", "components"]
+categories = ["command-line-utilities", "embedded", "science::robotics"]
+
+[dependencies]
+clap = { version = "4", features = ["derive", "env"] }
+toml = "0.9"
+toml_edit = "0.23"
+serde = { version = "1", features = ["derive"] }
+include_dir = "0.7"
+anyhow = "1"
+owo-colors = { version = "4", features = ["supports-colors"] }
+dialoguer = "0.11"
+indicatif = "0.17"
+sha2 = "0.10"
+similar = "2"
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+tempfile = "3"
+insta = "1"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unwrap_used = "warn"
+pedantic = { level = "warn", priority = -1 }
+# Pedantic lints that fight readability in a CLI binary.
+module_name_repetitions = "allow"
+missing_errors_doc = "allow"
+too_many_lines = "allow"
+struct_field_names = "allow"
+single_match_else = "allow"
+unused_self = "allow"
+doc_markdown = "allow"
+naive_bytecount = "allow"
+
+[profile.release]
+lto = "thin"
+strip = true
